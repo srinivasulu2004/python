@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'job2' }
+    agent { label 'node2' }
 
     environment {
         IMAGE_NAME = 'srinivasulu2004/repo-1'
