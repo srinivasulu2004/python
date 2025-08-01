@@ -10,9 +10,8 @@ def home():
     <html>
     <head><title>My Flask EC2 App</title></head>
     <body style="font-family: Arial; margin: 40px;">
-        <h1>Hello  Guys ..............</h1>
-        <h2> welcome to my web page</h2>
-        <p>This app is running directly on EC2 without Docker.</p>
+        <p>Hello  Guys ..............</p>
+        <h1>ITS FROM QA BRANCH </h1>
         <ul>
             <li><a href="/fetch">/fetch - External API Call</a></li>
             <li><a href="/health">/health - Health Check</a></li>
