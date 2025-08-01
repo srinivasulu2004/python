@@ -11,7 +11,7 @@ def home():
     <head><title>My Flask EC2 App</title></head>
     <body style="font-family: Arial; margin: 40px;">
         <p>Hello  Guys ..............</p>
-        <h1>ITS FROM QA BRANCH </h1>
+        <h1>IT'S FROM QA ENVIRONMENT </h1>
         <ul>
             <li><a href="/fetch">/fetch - External API Call</a></li>
             <li><a href="/health">/health - Health Check</a></li>
