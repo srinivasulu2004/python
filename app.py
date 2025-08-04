@@ -7,16 +7,59 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     html = """
-    <html>
-    <head><title>My Flask EC2 App</title></head>
-    <body style="font-family: Arial; margin: 40px;">
-        <p>hi guys....................</p>
-        <h1>IT'S FROM "dev" ENVIRONMENT </h1>
-        <ul>
-            <li><a href="/fetch">/fetch - External API Call</a></li>
-            <li><a href="/health">/health - Health Check</a></li>
-        </ul>
-    </body>
+    <html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      text-align: center;
+    }
+    .container {
+      max-width: 500px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+    a {
+      text-decoration: none;
+      color: white;
+      background: #ff7f50;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+    }
+    a:hover {
+      background: #ff4500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to My Page</h1>
+    <p>This is a simple and responsive HTML page. Feel free to explore!</p>
+    <a href="#">Get Started</a>
+  </div>
+</body>
     </html>
     """
     return render_template_string(html)
