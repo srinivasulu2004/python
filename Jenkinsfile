@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        PRIVATE_IP = "172.31.66.181"
+        PRIVATE_IP = "172.31.35.198"
         IMAGE_NAME = "pythonapp"
         APP_PORT = "5000"
     }
@@ -44,3 +44,4 @@ pipeline {
         }
     }
 }
+
