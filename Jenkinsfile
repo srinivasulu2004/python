@@ -1,52 +1,45 @@
 pipeline {
-    agent { label 'agent' }
-
+    agent any
     environment {
-        IMAGE_NAME = 'srinivasulu2004/repo-1'
-        VERSION = "${BUILD_NUMBER}"
+        PRIVATE_IP = "172.31.66.181"
+        IMAGE_NAME = "pythonapp"
+        APP_PORT = "5000"
     }
-
+ 
     stages {
-
-        stage('Clone Repository') {
+        stage('Clone GitHub Repo') {
             steps {
-                echo "Cloning source code..."
-    
+                git branch: 'main', url: 'https://github.com/srinivasulu2004/python.git'
             }
         }
-
-        stage('Run Tests') {
-            steps {
-                echo "Running unit tests..."
-                sh '''
-                echo "No tests found"
-                '''
-            }
-        }
-
+ 
         stage('Build Docker Image') {
             steps {
-                echo "🐳 Building Docker image..."
-                sh '''
-                    docker build -t $IMAGE_NAME:$VERSION .
-                '''
+                sh """
+                    docker build -t ${IMAGE_NAME} .
+                    docker save ${IMAGE_NAME} | gzip > ${IMAGE_NAME}.tar.gz
+                """
             }
         }
-
-         stage('Push Image') {
+ 
+        stage('Copy Docker Image to Private EC2') {
             steps {
-                withDockerRegistry([credentialsId: 'dockerhub', url: '']) {
-                    sh 'docker push $IMAGE_NAME:$VERSION'
-                }
+                sh """
+                    scp -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ${IMAGE_NAME}.tar.gz ubuntu@${PRIVATE_IP}:/home/ubuntu/
+                """
             }
         }
-
-        stage('Deploy (Optional)') {
+ 
+        stage('Run Docker Image in Private EC2') {
             steps {
-                echo " Deploying container (Example)..."
-                sh '''
-                    docker run --name container1 -d -p 5000:5000 $IMAGE_NAME:$VERSION
-                '''
+                sh """
+                    ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ubuntu@${PRIVATE_IP} '
+                        docker load < /home/ubuntu/${IMAGE_NAME}.tar.gz &&
+                        docker stop ${IMAGE_NAME} || true &&
+                        docker rm ${IMAGE_NAME} || true &&
+                        docker run -d --name ${IMAGE_NAME} -p ${APP_PORT}:${APP_PORT} ${IMAGE_NAME}
+                    '
+                """
             }
         }
     }
