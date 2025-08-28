@@ -1,48 +1,53 @@
 pipeline {
-    agent any
+    agent { label 'agent' }
+
     environment {
-        PRIVATE_IP = "172.31.78.222"
-        IMAGE_NAME = "pythonapp"
-        APP_PORT = "5000"
+        IMAGE_NAME = 'srinivasulu2004/repo-1'
+        VERSION = "${BUILD_NUMBER}"
     }
- 
+
     stages {
-        stage('Clone GitHub Repo') {
+
+        stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/srinivasulu2004/python.git'
+                echo "Cloning source code..."
+    
             }
         }
- 
+
+        stage('Run Tests') {
+            steps {
+                echo "Running unit tests..."
+                sh '''
+                echo "No tests found"
+                '''
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                sh """
-                    docker build -t ${IMAGE_NAME} .
-                    docker save ${IMAGE_NAME} | gzip > ${IMAGE_NAME}.tar.gz
-                """
+                echo "🐳 Building Docker image..."
+                sh '''
+                    docker build -t $IMAGE_NAME:$VERSION .
+                '''
             }
         }
- 
-        stage('Copy Docker Image to Private EC2') {
+
+         stage('Push Image') {
             steps {
-                sh """
-                    scp -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ${IMAGE_NAME}.tar.gz ubuntu@${PRIVATE_IP}:/home/ubuntu/
-                """
+                withDockerRegistry([credentialsId: 'dockerhub', url: '']) {
+                    sh 'docker push $IMAGE_NAME:$VERSION'
+                }
             }
         }
- 
-        stage('Run Docker Image in Private EC2') {
+
+        stage('Deploy (Optional)') {
             steps {
-                sh """
-                    ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ubuntu@${PRIVATE_IP} '
-                        docker load < /home/ubuntu/${IMAGE_NAME}.tar.gz &&
-                        docker stop ${IMAGE_NAME} || true &&
-                        docker rm ${IMAGE_NAME} || true &&
-                        docker run -d --name ${IMAGE_NAME} -p ${APP_PORT}:${APP_PORT} ${IMAGE_NAME}
-                    '
-                """
+                echo " Deploying container (Example)..."
+                sh '''
+                    docker run --name container1 -d -p 5000:5000 $IMAGE_NAME:$VERSION
+                '''
             }
         }
     }
 }
-
-
