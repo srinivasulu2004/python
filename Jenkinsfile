@@ -52,15 +52,16 @@ pipeline {
     }
     post{
         success{
-            mail to: "srinivasulubehara@gmail.com"
-                 subject: "Regarding the your job status"
+            mail to: "srinivasulubehara@gmail.com",
+                 subject: "Regarding the your job status",
                  body: "your build is SUCCESS" 
         }
          failure{
-            mail to: "srinivasulubehara@gmail.com"
-                 subject: "Regarding the your job status"
+            mail to: "srinivasulubehara@gmail.com",
+                 subject: "Regarding the your job status",
                  body: "your build is FAILED" 
         }
     }
 }
+
 
