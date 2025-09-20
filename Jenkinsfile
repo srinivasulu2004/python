@@ -45,9 +45,22 @@ pipeline {
             steps {
                 echo " Deploying container (Example)..."
                 sh '''
-                    docker run --name container1 -d -p 5000:5000 $IMAGE_NAME:$VERSION
+                    docker run --name container2 -d -p 9000:5000 $IMAGE_NAME:$VERSION
                 '''
             }
         }
     }
+    post{
+        success{
+            mail to: "srinivasulubehara@gmail.com"
+                 subject: "Regarding the your job status"
+                 body: "your build is SUCCESS" 
+        }
+         failure{
+            mail to: "srinivasulubehara@gmail.com"
+                 subject: "Regarding the your job status"
+                 body: "your build is FAILED" 
+        }
+    }
 }
+
