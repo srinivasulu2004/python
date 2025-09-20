@@ -28,7 +28,7 @@ pipeline {
             steps {
                 echo "🐳 Building Docker image..."
                 sh '''
-                    docker build -t $IMAGE_NAME:$VERSION 
+                    docker build -t $IMAGE_NAME:$VERSION . 
                 '''
             }
         }
@@ -45,7 +45,7 @@ pipeline {
             steps {
                 echo " Deploying container (Example)..."
                 sh '''
-                    docker run --name container2 -d -p 9000:5000 $IMAGE_NAME:$VERSION
+                    docker run --name container3 -d -p 8000:5000 $IMAGE_NAME:$VERSION
                 '''
             }
         }
@@ -63,6 +63,7 @@ pipeline {
         }
     }
 }
+
 
 
 
